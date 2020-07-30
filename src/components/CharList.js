@@ -3,10 +3,6 @@ import Char from "./Char.js";
 import { Grid } from "@material-ui/core";
 
 class CharList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   partitionCharIndex = (charList) => {
     var characterCounter = 0;
 
@@ -16,6 +12,10 @@ class CharList extends React.Component {
 
     return indexPartition;
   };
+
+  componentDidMount() {
+    console.log("MOUNTED CHARLIST");
+  }
 
   decideCardState = (
     userInput,
@@ -35,6 +35,7 @@ class CharList extends React.Component {
 
     // judge which card is correct/incorrect
     if (userInput.length >= indexPartition[idx]) {
+      // infer userChar using partitioning indices
       if (idx === 0) {
         userChar = userInput.slice(0, indexPartition[idx]);
       } else {
@@ -45,18 +46,20 @@ class CharList extends React.Component {
       }
       if (userChar === currentChar) {
         if (hintedCharList.includes(currentChar)) {
+          console.log("USE HINT");
           className = className.concat(" hinted ");
         } else {
           className = className.concat(" correct ");
         }
       } else {
+        className = className.concat(" incorrect ");
         onWrongInput(userChar, currentChar);
       }
     }
 
-    if (currentChar in wrongCharList) {
-      className = className.concat(" incorrect ");
-    }
+    // if (currentChar in wrongCharList) {
+    //   className = className.concat(" incorrect ");
+    // }
 
     // decide which Card to highlight
     for (var i = 0; i < indexPartition.length; i++) {
@@ -68,6 +71,7 @@ class CharList extends React.Component {
         }
         if (idx === indexOfCurrentCard) {
           className = className.concat(" highlighted ");
+          console.log("DISPATCH UPDATE CHAR");
           updateCurrentChar(currentChar);
         }
         break;
